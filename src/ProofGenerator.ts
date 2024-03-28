@@ -1,9 +1,12 @@
-import { Bool, Struct, ZkProgram } from 'o1js';
+import { Bool, FlexibleProvablePure, Struct, ZkProgram } from 'o1js';
 
-interface IProofInfo<T, K> {
-  PublicInput: Struct<T>;
-  PublicOutput: Struct<K>;
-  ZkApp: ZkProgram<Struct<T>, Struct<K>>; // ?
+interface IProofInfo<
+  T extends FlexibleProvablePure<any>,
+  K extends FlexibleProvablePure<any>
+> {
+  PublicInput: T;
+  PublicOutput: K;
+  ZkApp: ZkProgram<{ publicInput: T; publicOutput: K }, any>; // Struct can't be used as PublicInput???
 }
 
 interface IValid {
@@ -20,7 +23,7 @@ export function generateProof<ST extends IValid, T, K>(
   class PublicOutput extends Struct({}) {}
 
   const prove = (input: PublicInput): PublicOutput => {
-    input.value.myIsValid().assertTrue(); // ?
+    input.value.myIsValid().assertTrue(); // No myIsValid property, but value shoud have it
 
     return new PublicOutput({});
   };
@@ -39,11 +42,8 @@ export function generateProof<ST extends IValid, T, K>(
   });
 
   return {
-    PublicInput,
-    PublicOutput,
-    ZkApp,
+    PublicInput, // PublicOutput is not assignable to type Struct
+    PublicOutput, // PublicInput is not assignable to type Struct
+    ZkApp, // ZKApp is not assignable to type ZKProgram
   };
 }
-
-// PublicInput is not struct?
-// No valid in value
