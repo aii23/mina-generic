@@ -1,6 +1,12 @@
 # Mina zkApp: Generic_test
 
-This template uses TypeScript.
+Repository with simple generic proof.
+
+[Generic proof here](/src/ProofGenerator.ts)
+
+[Here is how this generator is going to be used](/src/ProofGeneratorUser.ts)
+
+[Here is how this works without generics](/src/NoGeneric.ts)
 
 ## How to build
 
